@@ -1,0 +1,24 @@
+2026/02/12-23:15:43.184 3408 Reusing MANIFEST E:\nepa\.wwebjs_auth\session\Default\IndexedDB\https_web.whatsapp.com_0.indexeddb.leveldb/MANIFEST-000001
+2026/02/12-23:15:43.185 3408 Recovering log #259
+2026/02/12-23:15:43.213 3408 Reusing old log E:\nepa\.wwebjs_auth\session\Default\IndexedDB\https_web.whatsapp.com_0.indexeddb.leveldb/000259.log 
+2026/02/12-23:15:43.213 3408 Delete type=2 #252
+2026/02/12-23:15:43.214 3408 Delete type=2 #253
+2026/02/12-23:15:43.214 3408 Delete type=2 #254
+2026/02/12-23:15:43.214 3408 Delete type=2 #255
+2026/02/12-23:15:43.214 3408 Delete type=2 #256
+2026/02/12-23:15:43.214 3408 Delete type=2 #257
+2026/02/12-23:15:43.214 3408 Delete type=2 #260
+2026/02/12-23:16:07.920 3408 Level-0 table #270: started
+2026/02/12-23:16:07.948 3408 Level-0 table #270: 1120350 bytes OK
+2026/02/12-23:16:07.949 3408 Delete type=0 #259
+2026/02/12-23:16:08.070 2e5c Compacting 1@1 + 8@2 files
+2026/02/12-23:16:08.152 2e5c Generated table #271@1: 59029 keys, 2223601 bytes
+2026/02/12-23:16:08.249 2e5c Generated table #272@1: 52190 keys, 2211885 bytes
+2026/02/12-23:16:08.321 2e5c Generated table #273@1: 26575 keys, 2187592 bytes
+2026/02/12-23:16:08.380 2e5c Generated table #274@1: 9588 keys, 2190363 bytes
+2026/02/12-23:16:08.466 2e5c Generated table #275@1: 31712 keys, 2216823 bytes
+2026/02/12-23:16:08.559 2e5c Generated table #276@1: 63274 keys, 2213560 bytes
+2026/02/12-23:16:08.584 2e5c Generated table #277@1: 18403 keys, 527828 bytes
+2026/02/12-23:16:08.584 2e5c Compacted 1@1 + 8@2 files => 13771652 bytes
+2026/02/12-23:16:08.586 2e5c compacted to: files[ 0 0 7 0 0 0 0 ]
+2026/02/12-23:16:08.586 2e5c Delete type=2 #270

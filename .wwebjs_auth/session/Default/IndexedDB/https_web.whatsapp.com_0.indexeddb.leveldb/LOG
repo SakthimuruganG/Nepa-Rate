@@ -1,0 +1,14 @@
+2026/02/12-23:18:10.224 4b44 Reusing MANIFEST E:\nepa\.wwebjs_auth\session\Default\IndexedDB\https_web.whatsapp.com_0.indexeddb.leveldb/MANIFEST-000001
+2026/02/12-23:18:10.225 4b44 Recovering log #269
+2026/02/12-23:18:10.235 4b44 Reusing old log E:\nepa\.wwebjs_auth\session\Default\IndexedDB\https_web.whatsapp.com_0.indexeddb.leveldb/000269.log 
+2026/02/12-23:18:10.235 4b44 Delete type=2 #248
+2026/02/12-23:18:10.235 4b44 Delete type=2 #261
+2026/02/12-23:18:10.235 4b44 Delete type=2 #262
+2026/02/12-23:18:10.235 4b44 Delete type=2 #263
+2026/02/12-23:18:10.235 4b44 Delete type=2 #264
+2026/02/12-23:18:10.235 4b44 Delete type=2 #265
+2026/02/12-23:18:10.235 4b44 Delete type=2 #266
+2026/02/12-23:18:10.235 4b44 Delete type=2 #267
+2026/02/12-23:18:28.246 2678 Level-0 table #280: started
+2026/02/12-23:18:28.277 2678 Level-0 table #280: 1174408 bytes OK
+2026/02/12-23:18:28.280 2678 Delete type=0 #269
