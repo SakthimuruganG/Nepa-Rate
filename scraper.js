@@ -97,12 +97,14 @@ Updated: ${new Date().toLocaleTimeString()}`;
       to: process.env.TO_PHONE,
     });
 
-    console.log("✅ SMS sent successfully!");
+    console.log("SMS sent successfully!");
   } catch (err) {
-    console.error("❌ Error:", err.message);
+    console.error("Error:", err.message);
   }
 }
 
-cron.schedule("0 9 * * *", () => {
+cron.schedule(process.env.CRON_SCHEDULE, () => {
   run(); 
 });
+
+setInterval(() => {}, 1000); 
