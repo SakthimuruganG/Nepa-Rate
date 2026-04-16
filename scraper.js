@@ -1,12 +1,15 @@
 const axios = require("axios");
 const cheerio = require("cheerio");
-const ExcelJS = require("exceljs");
+require("dotenv").config();
+const twilio = require("twilio");
 const fs = require("fs");
-const sendMessage = require("./whatsapp");
+const client = twilio(
+  process.env.TWILIO_ACCOUNT_SID,
+  process.env.TWILIO_AUTH_TOKEN,
+);
+const cron = require("node-cron");
 
-const FILE = "egg_namakkal_table.xlsx";
 
-// ---------- Helper to format NECC ----------
 function formatNECCRate(raw) {
   if (!raw) return "";
   raw = raw.replace(/[^\d]/g, "");
@@ -16,7 +19,7 @@ function formatNECCRate(raw) {
   return raw;
 }
 
-// ---------- Fetch NEPA Rate ----------
+
 async function getNEPARate() {
   const url =
     "https://docs.google.com/spreadsheets/d/e/2PACX-1vRBg-MTLTITO1TnYddC0Q_U7iC3DymagcyDxWmkfAZSZUT0YtCiR8lLZLh8DiTZkzhlsosm05A28ptI/pub?gid=0&single=true&output=csv";
@@ -40,7 +43,7 @@ async function getNEPARate() {
   return { date, nepaRate: rate };
 }
 
-// ---------- Fetch NECC Namakkal ----------
+
 async function getNECCRate(dateStr) {
   const [day, month, year] = dateStr.split(".");
 
@@ -52,7 +55,7 @@ async function getNECCRate(dateStr) {
         "Content-Type": "application/x-www-form-urlencoded",
         "User-Agent": "Mozilla/5.0",
       },
-    }
+    },
   );
 
   const $ = cheerio.load(response.data);
@@ -71,55 +74,6 @@ async function getNECCRate(dateStr) {
   return formatNECCRate(rawRate);
 }
 
-// ---------- Write to Excel ----------
-async function writeToExcel(date, nepaRate, neccRate) {
-  const workbook = new ExcelJS.Workbook();
-  let sheet;
-
-  if (fs.existsSync(FILE)) {
-    await workbook.xlsx.readFile(FILE);
-    sheet = workbook.getWorksheet("Egg Rates");
-  } else {
-    sheet = workbook.addWorksheet("Egg Rates");
-
-    sheet.columns = [
-      { header: "Date", key: "date", width: 15 },
-      { header: "Place", key: "place", width: 15 },
-      { header: "NEPA Rate", key: "nepa", width: 15 },
-      { header: "NECC Rate", key: "necc", width: 15 },
-      { header: "Fetched At", key: "time", width: 25 },
-    ];
-
-    sheet.getRow(1).font = { bold: true };
-    sheet.getRow(1).alignment = { vertical: "middle", horizontal: "center" };
-  }
-
-  // Check duplicate date
-  let exists = false;
-  sheet.eachRow((row, rowNumber) => {
-    if (rowNumber > 1 && row.getCell(1).value === date) {
-      exists = true;
-    }
-  });
-
-  if (exists) {
-    console.log("⏭️ Today already exists in Excel");
-    return;
-  }
-
-  sheet.addRow({
-    date: date,
-    place: "Namakkal",
-    nepa: parseFloat(nepaRate),
-    necc: parseFloat(neccRate),
-    time: new Date().toISOString(),
-  });
-
-  await workbook.xlsx.writeFile(FILE);
-  console.log("✅ Excel updated successfully");
-}
-
-// ---------- MAIN ----------
 async function run() {
   try {
     console.log("Fetching NEPA...");
@@ -128,19 +82,27 @@ async function run() {
     console.log("Fetching NECC...");
     const neccRate = await getNECCRate(date);
 
-    await writeToExcel(date, nepaRate, neccRate);
-    const message = `🥚 *Namakkal Egg Rate – ${date}*
+    const message = `Namakkal Egg Rate - ${date}
 
-NEPA Rate : ₹${nepaRate}
-NECC Rate : ₹${neccRate}
+NEPA Rate: ₹${nepaRate}
+NECC Rate: ₹${neccRate}
 
-Updated at: ${new Date().toLocaleTimeString()}`;
+Updated: ${new Date().toLocaleTimeString()}`;
 
-await sendMessage(message);
+    console.log("Sending SMS...");
 
+    await client.messages.create({
+      body: message,
+      from: process.env.TWILIO_PHONE,
+      to: process.env.TO_PHONE,
+    });
+
+    console.log("✅ SMS sent successfully!");
   } catch (err) {
     console.error("❌ Error:", err.message);
   }
 }
 
-run();
+cron.schedule("0 9 * * *", () => {
+  run(); 
+});
