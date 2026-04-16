@@ -3,12 +3,15 @@ const cheerio = require("cheerio");
 require("dotenv").config();
 const twilio = require("twilio");
 const fs = require("fs");
+const cron = require("node-cron");
+const express = require("express");
+const app = express();
+const moment = require("moment");
+
 const client = twilio(
   process.env.TWILIO_ACCOUNT_SID,
   process.env.TWILIO_AUTH_TOKEN,
 );
-const cron = require("node-cron");
-
 
 function formatNECCRate(raw) {
   if (!raw) return "";
@@ -18,7 +21,6 @@ function formatNECCRate(raw) {
   }
   return raw;
 }
-
 
 async function getNEPARate() {
   const url =
@@ -42,7 +44,6 @@ async function getNEPARate() {
 
   return { date, nepaRate: rate };
 }
-
 
 async function getNECCRate(dateStr) {
   const [day, month, year] = dateStr.split(".");
@@ -87,7 +88,7 @@ async function run() {
 NEPA Rate: ₹${nepaRate}
 NECC Rate: ₹${neccRate}
 
-Updated: ${new Date().toLocaleTimeString()}`;
+Last Fetched At: ${new Date().toLocaleTimeString()}`;
 
     console.log("Sending SMS...");
 
@@ -103,8 +104,19 @@ Updated: ${new Date().toLocaleTimeString()}`;
   }
 }
 
-cron.schedule(process.env.CRON_SCHEDULE, () => {
-  run(); 
-});
+cron.schedule(
+  process.env.CRON_SCHEDULE,
+  () => {
+    run();
+  },
+  {
+    timezone: "Asia/Kolkata",
+  },
+);
 
-setInterval(() => {}, 1000); 
+app.get("/", (req, res) => res.send("Running"));
+app.listen(process.env.APP_PORT, () => {
+  console.log(
+    `NEPA RATE API started on port ${process.env.APP_PORT} at ${moment().format("YYYY-MM-DD HH:mm")}`,
+  );
+});
