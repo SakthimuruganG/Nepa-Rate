@@ -115,8 +115,8 @@ cron.schedule(
 );
 
 app.get("/", (req, res) => res.send("Running"));
-app.listen(process.env.APP_PORT, () => {
-  console.log(
-    `NEPA RATE API started on port ${process.env.APP_PORT} at ${moment().format("YYYY-MM-DD HH:mm")}`,
-  );
+const PORT = process.env.APP_PORT || 3000;
+
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
 });
